@@ -1,6 +1,7 @@
-import pygame
 import random
 import sys
+
+import pygame
 
 # ============================================
 # Konfigurasi Game
@@ -26,147 +27,148 @@ LIGHT_GREY = (80, 80, 80)
 
 # Warna untuk 7 tetromino (I, O, T, S, Z, J, L)
 COLORS = {
-    'I': (0, 240, 240),   # Cyan
-    'O': (240, 240, 0),   # Yellow
-    'T': (160, 0, 240),   # Purple
-    'S': (0, 240, 0),     # Green
-    'Z': (240, 0, 0),     # Red
-    'J': (0, 0, 240),     # Blue
-    'L': (240, 160, 0),   # Orange
+    "I": (0, 240, 240),  # Cyan
+    "O": (240, 240, 0),  # Yellow
+    "T": (160, 0, 240),  # Purple
+    "S": (0, 240, 0),  # Green
+    "Z": (240, 0, 0),  # Red
+    "J": (0, 0, 240),  # Blue
+    "L": (240, 160, 0),  # Orange
 }
 
 # Bentuk tetromino ditulis sebagai rotasi 4x4 grid (string)
 # Menggunakan representasi umum: '.' kosong, 'X' terisi
 SHAPES = {
-    'S': [
+    "S": [
         [
-            '....',
-            '..XX',
-            '.XX.',
-            '....',
+            "....",
+            "..XX",
+            ".XX.",
+            "....",
         ],
         [
-            '....',
-            '.X..',
-            '.XX.',
-            '..X.',
-        ],
-    ],
-    'Z': [
-        [
-            '....',
-            '.XX.',
-            '..XX',
-            '....',
-        ],
-        [
-            '....',
-            '..X.',
-            '.XX.',
-            '.X..',
+            "....",
+            ".X..",
+            ".XX.",
+            "..X.",
         ],
     ],
-    'I': [
+    "Z": [
         [
-            '....',
-            'XXXX',
-            '....',
-            '....',
+            "....",
+            ".XX.",
+            "..XX",
+            "....",
         ],
         [
-            '..X.',
-            '..X.',
-            '..X.',
-            '..X.',
-        ],
-    ],
-    'O': [
-        [
-            '....',
-            '.XX.',
-            '.XX.',
-            '....',
+            "....",
+            "..X.",
+            ".XX.",
+            ".X..",
         ],
     ],
-    'T': [
+    "I": [
         [
-            '....',
-            '.XXX',
-            '..X.',
-            '....',
+            "....",
+            "XXXX",
+            "....",
+            "....",
         ],
         [
-            '....',
-            '..X.',
-            '.XX.',
-            '..X.',
-        ],
-        [
-            '....',
-            '..X.',
-            '.XXX',
-            '....',
-        ],
-        [
-            '....',
-            '..X.',
-            '..XX',
-            '..X.',
+            "..X.",
+            "..X.",
+            "..X.",
+            "..X.",
         ],
     ],
-    'J': [
+    "O": [
         [
-            '....',
-            '.XXX',
-            '.X..',
-            '....',
-        ],
-        [
-            '....',
-            '.XX.',
-            '..X.',
-            '..X.',
-        ],
-        [
-            '....',
-            '..X.',
-            '.XXX',
-            '....',
-        ],
-        [
-            '....',
-            '..X.',
-            '..X.',
-            '.XX.',
+            "....",
+            ".XX.",
+            ".XX.",
+            "....",
         ],
     ],
-    'L': [
+    "T": [
         [
-            '....',
-            '.XXX',
-            '...X',
-            '....',
+            "....",
+            ".XXX",
+            "..X.",
+            "....",
         ],
         [
-            '....',
-            '..X.',
-            '..X.',
-            '.XX.',
+            "....",
+            "..X.",
+            ".XX.",
+            "..X.",
         ],
         [
-            '....',
-            '.X..',
-            '.XXX',
-            '....',
+            "....",
+            "..X.",
+            ".XXX",
+            "....",
         ],
         [
-            '....',
-            '.XX.',
-            '.X..',
-            '.X..',
+            "....",
+            "..X.",
+            "..XX",
+            "..X.",
+        ],
+    ],
+    "J": [
+        [
+            "....",
+            ".XXX",
+            ".X..",
+            "....",
+        ],
+        [
+            "....",
+            ".XX.",
+            "..X.",
+            "..X.",
+        ],
+        [
+            "....",
+            "..X.",
+            ".XXX",
+            "....",
+        ],
+        [
+            "....",
+            "..X.",
+            "..X.",
+            ".XX.",
+        ],
+    ],
+    "L": [
+        [
+            "....",
+            ".XXX",
+            "...X",
+            "....",
+        ],
+        [
+            "....",
+            "..X.",
+            "..X.",
+            ".XX.",
+        ],
+        [
+            "....",
+            ".X..",
+            ".XXX",
+            "....",
+        ],
+        [
+            "....",
+            ".XX.",
+            ".X..",
+            ".X..",
         ],
     ],
 }
+
 
 class Piece:
     def __init__(self, x, y, shape_key):
@@ -183,7 +185,7 @@ class Piece:
         format = self.shape[self.rotation % len(self.shape)]
         for i, line in enumerate(format):
             for j, char in enumerate(line):
-                if char == 'X':
+                if char == "X":
                     positions.append((self.x + j - 1, self.y + i - 2))
         return positions
 
@@ -197,7 +199,9 @@ def create_grid(locked_positions):
 
 
 def valid_space(piece, grid):
-    accepted_positions = [(x, y) for y in range(ROWS) for x in range(COLS) if grid[y][x] == BLACK]
+    accepted_positions = [
+        (x, y) for y in range(ROWS) for x in range(COLS) if grid[y][x] == BLACK
+    ]
     formatted = piece.get_formatted_coords()
     for x, y in formatted:
         if y < 0:
@@ -208,7 +212,7 @@ def valid_space(piece, grid):
 
 
 def check_lost(locked_positions):
-    for (x, y) in locked_positions:
+    for x, y in locked_positions:
         if y < 1:
             return True
     return False
@@ -240,7 +244,7 @@ def clear_rows(grid, locked):
                 except KeyError:
                     pass
             # Geser turun baris di atas y
-            for (x, y2) in sorted(list(locked.keys()), key=lambda p: p[1]):
+            for x, y2 in sorted(list(locked.keys()), key=lambda p: p[1]):
                 if y2 < y:
                     color = locked.pop((x, y2))
                     locked[(x, y2 + 1)] = color
@@ -248,12 +252,12 @@ def clear_rows(grid, locked):
 
 
 def draw_next_piece(surface, piece, font):
-    label = font.render('Next:', True, WHITE)
+    label = font.render("Next:", True, WHITE)
     surface.blit(label, (PLAY_WIDTH + 20, 20))
     format = piece.shape[piece.rotation % len(piece.shape)]
     for i, line in enumerate(format):
         for j, char in enumerate(line):
-            if char == 'X':
+            if char == "X":
                 rect = pygame.Rect(PLAY_WIDTH + 20 + j * 20, 60 + i * 20, 20, 20)
                 pygame.draw.rect(surface, piece.color, rect)
                 pygame.draw.rect(surface, LIGHT_GREY, rect, 1)
@@ -285,14 +289,14 @@ def draw_window(surface, grid, score, high_score, next_piece):
     draw_grid(surface, grid)
 
     # Sidebar info
-    font_title = pygame.font.SysFont('arial', 28, bold=True)
-    font_info = pygame.font.SysFont('arial', 22)
+    font_title = pygame.font.SysFont("arial", 28, bold=True)
+    font_info = pygame.font.SysFont("arial", 22)
 
-    title = font_title.render('TETRIS', True, WHITE)
+    title = font_title.render("TETRIS", True, WHITE)
     surface.blit(title, (PLAY_WIDTH + 20, WINDOW_HEIGHT - 50))
 
-    draw_text_right(surface, f'Score: {score}', 220, font_info)
-    draw_text_right(surface, f'High:  {high_score}', 250, font_info)
+    draw_text_right(surface, f"Score: {score}", 220, font_info)
+    draw_text_right(surface, f"High:  {high_score}", 250, font_info)
 
     draw_next_piece(surface, next_piece, font_info)
 
@@ -302,7 +306,7 @@ def draw_window(surface, grid, score, high_score, next_piece):
 
 def main():
     pygame.init()
-    pygame.display.set_caption('Tetris - Pygame')
+    pygame.display.set_caption("Tetris - Pygame")
     surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     clock = pygame.time.Clock()
 
@@ -359,7 +363,9 @@ def main():
                 elif event.key == pygame.K_UP:
                     # rotasi
                     prev_rotation = current_piece.rotation
-                    current_piece.rotation = (current_piece.rotation + 1) % len(current_piece.shape)
+                    current_piece.rotation = (current_piece.rotation + 1) % len(
+                        current_piece.shape
+                    )
                     if not valid_space(current_piece, grid):
                         # coba wall-kick sederhana: geser kiri/kanan 1
                         kicked = False
@@ -425,16 +431,23 @@ def main():
 
 
 def game_over(surface, score):
-    font_big = pygame.font.SysFont('arial', 42, bold=True)
-    font_small = pygame.font.SysFont('arial', 24)
+    font_big = pygame.font.SysFont("arial", 42, bold=True)
+    font_small = pygame.font.SysFont("arial", 24)
     surface.fill(BLACK)
-    over_text = font_big.render('GAME OVER', True, WHITE)
-    score_text = font_small.render(f'Score: {score}', True, WHITE)
-    info_text = font_small.render('Press R to Restart or Q to Quit', True, WHITE)
+    over_text = font_big.render("GAME OVER", True, WHITE)
+    score_text = font_small.render(f"Score: {score}", True, WHITE)
+    info_text = font_small.render("Press R to Restart or Q to Quit", True, WHITE)
 
-    surface.blit(over_text, (PLAY_WIDTH // 2 - over_text.get_width() // 2, PLAY_HEIGHT // 2 - 80))
-    surface.blit(score_text, (PLAY_WIDTH // 2 - score_text.get_width() // 2, PLAY_HEIGHT // 2 - 20))
-    surface.blit(info_text, (PLAY_WIDTH // 2 - info_text.get_width() // 2, PLAY_HEIGHT // 2 + 30))
+    surface.blit(
+        over_text, (PLAY_WIDTH // 2 - over_text.get_width() // 2, PLAY_HEIGHT // 2 - 80)
+    )
+    surface.blit(
+        score_text,
+        (PLAY_WIDTH // 2 - score_text.get_width() // 2, PLAY_HEIGHT // 2 - 20),
+    )
+    surface.blit(
+        info_text, (PLAY_WIDTH // 2 - info_text.get_width() // 2, PLAY_HEIGHT // 2 + 30)
+    )
 
     pygame.display.update()
 
@@ -456,5 +469,5 @@ def game_over(surface, score):
         pygame.time.wait(100)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
